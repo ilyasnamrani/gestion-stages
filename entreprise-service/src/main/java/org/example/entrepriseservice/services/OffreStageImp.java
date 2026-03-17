@@ -49,6 +49,7 @@ public class OffreStageImp implements OffreStageService {
         this.candidatFeignClient = candidatFeignClient;
     }
     @Override
+    @Cacheable(value = "offre-stage", key = "#id")
     public OffreStageResponse getOffreStageById(Long id) {
 
         OffreStage offre = offreStageRepository.findById(id)
@@ -120,6 +121,7 @@ public class OffreStageImp implements OffreStageService {
     }
 
     @Override
+    @Cacheable(value = "encadrant-offre", key = "#idOffre")
     public EncadrantResponse getEncadrantByOffre(Long idOffre) {
         OffreStage offre =  offreStageRepository.findById(idOffre).get();
         Encadrant encadrant = offre.getEncadrant();
@@ -127,6 +129,7 @@ public class OffreStageImp implements OffreStageService {
     }
 
     @Override
+    @Cacheable(value = "entreprise-offre", key = "#idOffre")
     public EntrepriseResponseV2 getEntrepriseByOffre(Long idOffre) {
         OffreStage offre =  offreStageRepository.findById(idOffre).get();
         Entreprise entreprise = offre.getEntreprise();

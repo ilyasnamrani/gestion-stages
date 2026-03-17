@@ -2,6 +2,7 @@ package org.example.entrepriseservice.dtos;
 
 import lombok.*;
 
+import java.io.Serializable;
 import java.util.List;
 
 @Getter
@@ -9,7 +10,7 @@ import java.util.List;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class EntrepriseResponse {
+public class EntrepriseResponse implements Serializable {
     private Long idEntreprise;
     private String nomEntreprise;
     private String adresseEntreprise;

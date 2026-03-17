@@ -2,6 +2,7 @@ package org.example.candidatservice.models;
 
 import lombok.*;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -10,7 +11,7 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class OffreStage {
+public class OffreStage implements Serializable {
     private Long idOffreStage;
     private String titreOffre ;
     private String descriptionOffre ;

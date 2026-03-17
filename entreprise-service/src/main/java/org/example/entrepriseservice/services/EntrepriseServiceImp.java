@@ -10,6 +10,7 @@ import org.example.entrepriseservice.mappers.OffreStageMapper;
 import org.example.entrepriseservice.repositories.EncadrantRepository;
 import org.example.entrepriseservice.repositories.EntrepriseRepository;
 import org.example.entrepriseservice.repositories.OffreStageRepository;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -38,11 +39,13 @@ public class EntrepriseServiceImp implements EntrepriseService {
     }
 
     @Override
+    @Cacheable(value = "entreprise", key = "#id")
     public EntrepriseResponse getEntrepriseV1(Long id) {
         return entrepriseMapper.toEntrepriseResponse(entrepriseRepository.findById(id).get());
     }
 
     @Override
+    @Cacheable(value = "entrepriseV2", key = "#id")
     public EntrepriseResponseV2 getEntrepriseV2(Long id) {
         return entrepriseMapper.toEntrepriseResponseV2(entrepriseRepository.findById(id).get());
     }
@@ -106,6 +109,7 @@ public class EntrepriseServiceImp implements EntrepriseService {
     }
 
     @Override
+    @Cacheable(value = "entreprises")
     public List<EntrepriseResponse> getAllEntreprisesV1() {
         List<EntrepriseResponse> entrepriseResponses = new ArrayList<>();
         List<Entreprise> entrepriseList = entrepriseRepository.findAll();
@@ -116,6 +120,7 @@ public class EntrepriseServiceImp implements EntrepriseService {
     }
 
     @Override
+    @Cacheable(value = "entreprisesV2")
     public List<EntrepriseResponseV2> getAllEntreprisesV2() {
         List<EntrepriseResponseV2> entrepriseResponses = new ArrayList<>();
         List<Entreprise> entrepriseList = entrepriseRepository.findAll();

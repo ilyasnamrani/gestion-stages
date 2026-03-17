@@ -2,6 +2,7 @@ package org.example.entrepriseservice.dtos;
 
 import lombok.*;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -10,7 +11,7 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class OffreStageResponse {
+public class OffreStageResponse implements Serializable {
     private Long idOffreStage;
     private String titreOffre ;
     private String descriptionOffre ;

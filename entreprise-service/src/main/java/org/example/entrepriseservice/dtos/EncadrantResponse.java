@@ -2,6 +2,7 @@ package org.example.entrepriseservice.dtos;
 
 import lombok.*;
 
+import java.io.Serializable;
 import java.util.List;
 
 @ToString
@@ -9,7 +10,7 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class EncadrantResponse {
+public class EncadrantResponse implements Serializable {
     private Long idEncadrant;
     private String nomEncadrant;
     private String prenomEncadrant;

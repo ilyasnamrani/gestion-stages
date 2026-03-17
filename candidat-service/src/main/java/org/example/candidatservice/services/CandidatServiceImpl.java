@@ -32,6 +32,7 @@ public class CandidatServiceImpl implements CandidatService {
     }
 
     @Override
+    @Cacheable(value = "candidat", key = "#id")
     public CandidatResponse getCandidat(Long id) {
         Candidat candidat = candidatRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Candidat not found"));
@@ -86,6 +87,7 @@ public class CandidatServiceImpl implements CandidatService {
     }
 
     @Override
+    @Cacheable(value = "candidat-offres-pos", key = "#idCandidat")
     public List<OffreStage> offresStagePos(Long idCandidat) {
         Candidat c = candidatRepository.findById(idCandidat)
                 .orElseThrow(() -> new EntityNotFoundException("Candidat not found"));
@@ -129,6 +131,7 @@ public class CandidatServiceImpl implements CandidatService {
     }
 
     @Override
+    @Cacheable(value = "candidat-offres-accepted", key = "#idCandidat")
     public List<OffreStage> offresStageAccepted(Long idCandidat) {
         Candidat c = candidatRepository.findById(idCandidat)
                 .orElseThrow(() -> new EntityNotFoundException("Candidat not found"));
