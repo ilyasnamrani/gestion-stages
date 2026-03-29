@@ -1,0 +1,13 @@
+# Ignorer les variables d'environnement locales
+.env
+.env.*
+
+# Ignorer les fichiers de l'IDE (IntelliJ, VS Code, etc.)
+.idea/
+*.iml
+.vscode/
+
+# Ignorer les builds globaux (si vous construisez à la racine)
+target/
+*.jar
+*.war

@@ -16,7 +16,7 @@ public class NotificationService {
 
     private final JavaMailSender mailSender;
 
-    @Value("${spring.mail.from}")
+    @Value("${spring.mail.from:no-reply@gestion-stages.com}")
     private String fromEmail;
 
     public NotificationService(JavaMailSender mailSender) {
