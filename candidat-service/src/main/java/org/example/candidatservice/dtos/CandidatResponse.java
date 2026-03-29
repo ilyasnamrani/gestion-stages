@@ -13,7 +13,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class CandidatResponse implements Serializable {
+public class CandidatResponse {
     private Long idCandidat;
     private String nomCandidat;
     private String prenomCandidat;
@@ -25,4 +25,5 @@ public class CandidatResponse implements Serializable {
     private List<String> titresStagesPos;
     private List<String> titresStagesAccepted;
     private String infosEncadrant;
-}
+    private String eventType; // "CREATED" ou "UPDATED"
+}

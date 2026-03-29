@@ -22,13 +22,16 @@ public class CandidatServiceImpl implements CandidatService {
     private final CandidatRepository candidatRepository;
     private final CandidatMapper candidatMapper;
     private final EntrepriseFeignClient entrepriseFeignClient;
+    private final KafkaProducerService kafkaProducerService;
 
     public CandidatServiceImpl(CandidatRepository candidatRepository,
-                               CandidatMapper candidatMapper,
-                               EntrepriseFeignClient entrepriseFeignClient) {
+            CandidatMapper candidatMapper,
+            EntrepriseFeignClient entrepriseFeignClient,
+            KafkaProducerService kafkaProducerService) {
         this.candidatRepository = candidatRepository;
         this.candidatMapper = candidatMapper;
         this.entrepriseFeignClient = entrepriseFeignClient;
+        this.kafkaProducerService = kafkaProducerService;
     }
 
     @Override
@@ -46,7 +49,6 @@ public class CandidatServiceImpl implements CandidatService {
                 .collect(Collectors.toList());
     }
 
-
     @Cacheable("cache-candidats")
     @Override
     public List<CandidatResponse> getCandidats() {
@@ -57,9 +59,10 @@ public class CandidatServiceImpl implements CandidatService {
 
     @Override
     public CandidatResponse createCandidat(@Valid CandidatRequest candidatRequest) {
-        return candidatMapper.toResponse(
-                candidatRepository.save(candidatMapper.toCandidat(candidatRequest))
-        );
+        CandidatResponse response = candidatMapper.toResponse(
+                candidatRepository.save(candidatMapper.toCandidat(candidatRequest)));
+        kafkaProducerService.sendCandidateCreatedEvent(response);
+        return response;
     }
 
     @Override
@@ -83,7 +86,9 @@ public class CandidatServiceImpl implements CandidatService {
                 })
                 .orElseThrow(() -> new EntityNotFoundException("Candidat non trouvé avec id " + id));
 
-        return candidatMapper.toResponse(updated); // no second save
+        CandidatResponse response = candidatMapper.toResponse(updated);
+        kafkaProducerService.sendCandidateUpdatedEvent(response);
+        return response; // no second save
     }
 
     @Override
@@ -92,7 +97,7 @@ public class CandidatServiceImpl implements CandidatService {
         Candidat c = candidatRepository.findById(idCandidat)
                 .orElseThrow(() -> new EntityNotFoundException("Candidat not found"));
         List<OffreStage> offreStagePos = new ArrayList<>();
-        if(c.getIdOffresStagePos() !=null) {
+        if (c.getIdOffresStagePos() != null) {
             for (Long po : c.getIdOffresStagePos()) {
                 offreStagePos.add(entrepriseFeignClient.getOffreStageById(po));
             }
@@ -136,7 +141,7 @@ public class CandidatServiceImpl implements CandidatService {
         Candidat c = candidatRepository.findById(idCandidat)
                 .orElseThrow(() -> new EntityNotFoundException("Candidat not found"));
         List<OffreStage> offreStageAccepted = new ArrayList<>();
-        if(c.getOffresStageAccepted() != null) {
+        if (c.getOffresStageAccepted() != null) {
             for (Long ac : c.getIdOffresStageAccepted()) {
                 offreStageAccepted.add(entrepriseFeignClient.getOffreStageById(ac));
             }
