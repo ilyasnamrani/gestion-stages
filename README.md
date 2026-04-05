@@ -20,8 +20,7 @@ Le projet est conçu pour être scalable, résilient et facile à surveiller gr�
 | Service | Port | Base de Données | Description |
 |---|---|---|---|
 | **Candidat Service** | 8080 | PostgreSQL (`candidat_db`) | Gestion des profils candidats. |
-| **Entreprise Service** | 8081 | PostgreSQL (`entreprise_db`) | Gestion des offres et
-entreprises. |
+| **Entreprise Service** | 8081 | PostgreSQL (`entreprise_db`) | Gestion des offres et entreprises. |
 | **Notification Service** | 8082 | - | Envoi automatique d'emails via Kafka. |
 
 ##  Lancement Rapide
