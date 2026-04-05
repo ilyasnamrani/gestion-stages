@@ -43,6 +43,11 @@ services:
       - ZIPKIN_URL=http://zipkin:9411/api/v2/spans
       - REDIS_HOST=redis
       - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
+      - DB_HOST=postgres-candidat
+      - DB_PORT=5432
+      - DB_NAME=candidat_db
+      - DB_USERNAME=postgres
+      - DB_PASSWORD=postgres
     depends_on:
       config-server:
         condition: service_healthy
@@ -50,6 +55,8 @@ services:
         condition: service_started
       kafka:
         condition: service_started
+      postgres-candidat:
+        condition: service_healthy
     healthcheck:
       test: [ "CMD-SHELL", "wget -qO- http://localhost:8080/actuator/health || exit 1" ]
       interval: 10s
@@ -68,11 +75,18 @@ services:
       - CONFIG_URL=http://config-doc:9999
       - ZIPKIN_URL=http://zipkin:9411/api/v2/spans
       - REDIS_HOST=redis
+      - DB_HOST=postgres-entreprise
+      - DB_PORT=5432
+      - DB_NAME=entreprise_db
+      - DB_USERNAME=postgres
+      - DB_PASSWORD=postgres
     depends_on:
       config-server:
         condition: service_healthy
       redis:
         condition: service_started
+      postgres-entreprise:
+        condition: service_healthy
     healthcheck:
       test: [ "CMD-SHELL", "wget -qO- http://localhost:8081/actuator/health || exit 1" ]
       interval: 10s
@@ -119,12 +133,47 @@ services:
       kafka:
         condition: service_started
 
-
   zipkin:
     image: openzipkin/zipkin:latest
     container_name: zipkin-doc
     ports:
       - "9411:9411"
+
+  postgres-candidat:
+    image: postgres:16-alpine
+    container_name: postgres-candidat-doc
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_DB=candidat_db
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    volumes:
+      - postgres_candidat_data:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres -d candidat_db" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+  postgres-entreprise:
+    image: postgres:16-alpine
+    container_name: postgres-entreprise-doc
+    ports:
+      - "5433:5432"
+    environment:
+      - POSTGRES_DB=entreprise_db
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    volumes:
+      - postgres_entreprise_data:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres -d entreprise_db" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
 
   redis:
     image: redis:latest
@@ -167,3 +216,7 @@ services:
       - KAFKA_BROKERCONNECT=kafka:9092
     depends_on:
       - kafka
+
+volumes:
+  postgres_candidat_data:
+  postgres_entreprise_data:

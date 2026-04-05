@@ -49,7 +49,7 @@ public class CandidatServiceImpl implements CandidatService {
                 .collect(Collectors.toList());
     }
 
-    @Cacheable("cache-candidats")
+    @Cacheable(value ="cache-candidats")
     @Override
     public List<CandidatResponse> getCandidats() {
         return candidatRepository.findAll().stream()
